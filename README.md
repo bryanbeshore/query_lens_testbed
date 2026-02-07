@@ -20,7 +20,8 @@ bin/rails db:prepare   # creates DB, runs migrations, seeds data
 ## Running
 
 ```bash
-ANTHROPIC_API_KEY=your-key-here bin/dev
+export ANTHROPIC_API_KEY=sk-ant-your-key-here
+bin/dev
 ```
 
 - **Dashboard:** [localhost:3000](http://localhost:3000) — overview of all seed data
