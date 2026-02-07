@@ -1,0 +1,129 @@
+<div style="max-width: 1100px; margin: 0 auto; padding: 2rem; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1 style="margin: 0; font-size: 1.75rem;">QueryLens Testbed</h1>
+    <a href="/query_lens" style="background: #4f46e5; color: white; padding: 0.6rem 1.2rem; border-radius: 0.5rem; text-decoration: none; font-weight: 500;">
+      Open QueryLens &rarr;
+    </a>
+  </div>
+
+  <%# --- Stat cards --- %>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.25rem;">
+      <div style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Users</div>
+      <div style="font-size: 2rem; font-weight: 700; color: #0f172a;"><%= @user_count %></div>
+      <div style="font-size: 0.8rem; color: #64748b;"><%= @admin_count %> admins</div>
+    </div>
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.25rem;">
+      <div style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Teams</div>
+      <div style="font-size: 2rem; font-weight: 700; color: #0f172a;"><%= @team_count %></div>
+      <div style="font-size: 0.8rem; color: #64748b;"><%= @teams_by_plan.map { |k,v| "#{v} #{k}" }.join(", ") %></div>
+    </div>
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.25rem;">
+      <div style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Posts</div>
+      <div style="font-size: 2rem; font-weight: 700; color: #0f172a;"><%= @post_count %></div>
+      <div style="font-size: 0.8rem; color: #64748b;"><%= @posts_by_status.map { |k,v| "#{v} #{k}" }.join(", ") %></div>
+    </div>
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.25rem;">
+      <div style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Comments</div>
+      <div style="font-size: 2rem; font-weight: 700; color: #0f172a;"><%= @comment_count %></div>
+      <div style="font-size: 0.8rem; color: #64748b;"><%= @tag_count %> tags</div>
+    </div>
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.25rem;">
+      <div style="font-size: 0.8rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Invoices</div>
+      <div style="font-size: 2rem; font-weight: 700; color: #0f172a;"><%= @invoice_count %></div>
+      <div style="font-size: 0.8rem; color: #64748b;"><%= @invoices_by_status.map { |k,v| "#{v} #{k}" }.join(", ") %></div>
+    </div>
+    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 0.75rem; padding: 1.25rem;">
+      <div style="font-size: 0.8rem; color: #15803d; text-transform: uppercase; letter-spacing: 0.05em;">Revenue (Paid)</div>
+      <div style="font-size: 2rem; font-weight: 700; color: #15803d;">$<%= number_with_delimiter(@total_revenue, delimiter: ",") %></div>
+      <div style="font-size: 0.8rem; color: #64748b;">$<%= number_with_delimiter(@outstanding, delimiter: ",") %> outstanding</div>
+    </div>
+  </div>
+
+  <%# --- Two-column layout --- %>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+
+    <%# Recent posts %>
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.25rem;">
+      <h2 style="margin: 0 0 1rem 0; font-size: 1.1rem;">Recent Posts</h2>
+      <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+        <thead>
+          <tr style="border-bottom: 1px solid #e2e8f0;">
+            <th style="text-align: left; padding: 0.4rem 0.5rem; color: #64748b;">Title</th>
+            <th style="text-align: left; padding: 0.4rem 0.5rem; color: #64748b;">Author</th>
+            <th style="text-align: left; padding: 0.4rem 0.5rem; color: #64748b;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @recent_posts.each do |post| %>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 0.4rem 0.5rem; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><%= post.title %></td>
+              <td style="padding: 0.4rem 0.5rem; color: #64748b;"><%= post.user.name %></td>
+              <td style="padding: 0.4rem 0.5rem;">
+                <% color = { "published" => "#15803d", "draft" => "#ca8a04", "archived" => "#64748b" }[post.status] %>
+                <span style="background: <%= color %>15; color: <%= color %>; padding: 0.15rem 0.5rem; border-radius: 1rem; font-size: 0.75rem;"><%= post.status %></span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <%# Leaderboards %>
+    <div>
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 1.5rem;">
+        <h2 style="margin: 0 0 1rem 0; font-size: 1.1rem;">Top Commenters</h2>
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+          <% @top_commenters.each do |(id, name), count| %>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 0.4rem 0.5rem;"><%= name %></td>
+              <td style="padding: 0.4rem 0.5rem; text-align: right; color: #64748b;"><%= count %> comments</td>
+            </tr>
+          <% end %>
+        </table>
+      </div>
+
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.25rem;">
+        <h2 style="margin: 0 0 1rem 0; font-size: 1.1rem;">Most Active Teams</h2>
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+          <% @top_teams.each do |(id, name), count| %>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 0.4rem 0.5rem;"><%= name %></td>
+              <td style="padding: 0.4rem 0.5rem; text-align: right; color: #64748b;"><%= count %> posts</td>
+            </tr>
+          <% end %>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <%# --- Teams breakdown --- %>
+  <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.25rem;">
+    <h2 style="margin: 0 0 1rem 0; font-size: 1.1rem;">Teams</h2>
+    <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+      <thead>
+        <tr style="border-bottom: 1px solid #e2e8f0;">
+          <th style="text-align: left; padding: 0.4rem 0.5rem; color: #64748b;">Name</th>
+          <th style="text-align: left; padding: 0.4rem 0.5rem; color: #64748b;">Plan</th>
+          <th style="text-align: right; padding: 0.4rem 0.5rem; color: #64748b;">Members</th>
+          <th style="text-align: right; padding: 0.4rem 0.5rem; color: #64748b;">Posts</th>
+          <th style="text-align: right; padding: 0.4rem 0.5rem; color: #64748b;">Invoices</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% Team.includes(:memberships, :posts, :invoices).each do |team| %>
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+            <td style="padding: 0.4rem 0.5rem; font-weight: 500;"><%= team.name %></td>
+            <td style="padding: 0.4rem 0.5rem;">
+              <% plan_color = { "free" => "#64748b", "starter" => "#2563eb", "pro" => "#7c3aed", "enterprise" => "#dc2626" }[team.plan] %>
+              <span style="background: <%= plan_color %>15; color: <%= plan_color %>; padding: 0.15rem 0.5rem; border-radius: 1rem; font-size: 0.75rem;"><%= team.plan %></span>
+            </td>
+            <td style="padding: 0.4rem 0.5rem; text-align: right;"><%= team.memberships.size %></td>
+            <td style="padding: 0.4rem 0.5rem; text-align: right;"><%= team.posts.size %></td>
+            <td style="padding: 0.4rem 0.5rem; text-align: right;"><%= team.invoices.size %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
