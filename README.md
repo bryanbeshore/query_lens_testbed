@@ -20,6 +20,10 @@ bin/rails db:prepare   # creates DB, runs migrations, seeds data
 ## Running
 
 ```bash
+# Option 1: Inline (key stays out of your shell history on some shells)
+ANTHROPIC_API_KEY=sk-ant-your-key-here bin/dev
+
+# Option 2: Export first (persists for the whole terminal session)
 export ANTHROPIC_API_KEY=sk-ant-your-key-here
 bin/dev
 ```
